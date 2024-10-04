@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Chat Room</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .chat-container { max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }
+        .messages { border: 1px solid #ddd; height: 300px; overflow-y: scroll; padding: 10px; }
+        .input-container { display: flex; }
+        input[type="text"] { flex: 1; padding: 10px; border: 1px solid #ddd; }
+        button { padding: 10px; border: none; background: #007bff; color: white; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages" id="messages"></div>
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <!-- Firebase Database -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzkgN79_fZfzXVwFwKIIWg9X3pj-R98PE",
+            authDomain: "iranarad-f5187.firebaseapp.com",
+            databaseURL: "https://iranarad-f5187-default-rtdb.firebaseio.com",
+            projectId: "iranarad-f5187",
+            storageBucket: "iranarad-f5187.appspot.com",
+            messagingSenderId: "615007231971",
+            appId: "1:615007231971:web:fca4790997802ec0484ad6"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const messagesElement = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+
+        // Fetch existing messages
+        db.ref('messages').on('child_added', function(snapshot) {
+            const message = snapshot.val();
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            messagesElement.appendChild(messageElement);
+            messagesElement.scrollTop = messagesElement.scrollHeight;
+        });
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message !== '') {
+                db.ref('messages').push().set(message);
+                messageInput.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+<!-- <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBzkgN79_fZfzXVwFwKIIWg9X3pj-R98PE",
+      authDomain: "iranarad-f5187.firebaseapp.com",
+      projectId: "iranarad-f5187",
+      storageBucket: "iranarad-f5187.appspot.com",
+      messagingSenderId: "615007231971",
+      appId: "1:615007231971:web:fca4790997802ec0484ad6",
+      measurementId: "G-6WP2HEHNRR"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script> -->
+
+
