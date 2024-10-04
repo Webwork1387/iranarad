@@ -22,12 +22,11 @@
         </div>
     </div>
 
-    <!-- Firebase App (the core Firebase SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <!-- Firebase Database -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getDatabase, ref, onChildAdded, push, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
-    <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBzkgN79_fZfzXVwFwKIIWg9X3pj-R98PE",
@@ -38,16 +37,17 @@
             messagingSenderId: "615007231971",
             appId: "1:615007231971:web:fca4790997802ec0484ad6"
         };
-        
+
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
         const messagesElement = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
 
         // Fetch existing messages
-        db.ref('messages').on('child_added', function(snapshot) {
+        const messagesRef = ref(db, 'messages');
+        onChildAdded(messagesRef, (snapshot) => {
             const message = snapshot.val();
             const messageElement = document.createElement('div');
             messageElement.textContent = message;
@@ -55,46 +55,14 @@
             messagesElement.scrollTop = messagesElement.scrollHeight;
         });
 
-        function sendMessage() {
+        window.sendMessage = function() {
             const message = messageInput.value.trim();
             if (message !== '') {
-                db.ref('messages').push().set(message);
+                const newMessageRef = push(messagesRef);
+                set(newMessageRef, message);
                 messageInput.value = '';
             }
-        }
+        };
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-<!-- <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-  
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyBzkgN79_fZfzXVwFwKIIWg9X3pj-R98PE",
-      authDomain: "iranarad-f5187.firebaseapp.com",
-      projectId: "iranarad-f5187",
-      storageBucket: "iranarad-f5187.appspot.com",
-      messagingSenderId: "615007231971",
-      appId: "1:615007231971:web:fca4790997802ec0484ad6",
-      measurementId: "G-6WP2HEHNRR"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script> -->
-
-
